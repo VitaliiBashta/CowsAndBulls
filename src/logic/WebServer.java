@@ -10,8 +10,7 @@ import java.util.Properties;
 
 class WebServer {
     private static final List<Worker> threads = new ArrayList<>();
-    private static final Properties props = new Properties();
-    static File root = new File("wwwRoot");;
+    static File root = new File("wwwRoot");
     private static int port=80;
 
     public static void main(String[] args) throws IOException {
