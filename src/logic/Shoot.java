@@ -1,8 +1,9 @@
 package logic;
 
 import static logic.Brush.*;
-import static logic.HTMLUtils.SEND_REQUEST;
-import static logic.HTMLUtils.buttonWrap;
+import static logic.Utils.SEND_REQUEST;
+import static logic.Utils.buttonWrap;
+
 
 class Shoot {
     final int cow, bull;
@@ -36,16 +37,23 @@ class Shoot {
             if (brush == undefined) defined = false;
             if (brush == matchCow || brush == matchBull) cow++;
             if (brush == matchBull) bull++;
-            if (this.bull == 4) brush = guessed;
+//            if (this.bull == 4) brush = guessed;
             result += "<td>" + buttonWrap(digit + "", brush.toString(), "gues" + digit + j, isEnemy ? "" : SEND_REQUEST) + "</td>";
         }
-        String resultStyle = "result";
-        if (defined && (this.cow != cow || this.bull < bull)) resultStyle = "wrongResult";
-        if (this.cow < cow || this.bull < bull) resultStyle = "wrongResult";
-        if (this.bull == bull && this.cow == cow) resultStyle = "matchResult";
-        if (this.bull == 4) resultStyle = "guessed";
-        result += "<td>" + buttonWrap(this.cow + ":" + this.bull, resultStyle, null, null) + "</td>";
-
+        String resultCowStyle = "resultCow";
+        String resultBullStyle = "resultBull";
+        if (defined && (this.cow != cow)) resultCowStyle = "wrongResultCow";
+        if (defined && (this.bull < bull)) resultBullStyle = "wrongResultBull";
+        if (this.cow < cow) resultCowStyle = "wrongResultCow";
+        if (this.bull < bull) resultBullStyle = "wrongResultBull";
+        if (this.cow == cow) resultCowStyle = "matchResultCow";
+        if (this.bull == bull) resultBullStyle = "matchResultBull";
+        if (this.bull == 4) {
+            resultCowStyle = "guessedCow";
+            resultBullStyle = "guessedBull";
+        }
+        result += "<td>" + buttonWrap(this.cow + "", resultCowStyle, null, null);
+        result += buttonWrap(this.bull + "", resultBullStyle, null, null) + "</td>";
         return "<tr>" + result + "</tr>";
     }
 

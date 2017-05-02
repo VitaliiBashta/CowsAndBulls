@@ -1,19 +1,166 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="css/styles.css">
     <script src="/js/logic.js"></script>
     <title>Cows and Bulls</title>
+    <style type="text/css">
+        body, html {margin:auto;background:#eeeeee;}
+        div {position: relative;width:100%;left: 5%;}
+        input {position: absolute;visibility: hidden;}
+        input.unmatched + label{display:none;}
+        #guessTable{margin-bottom:30px;}
+        #bullTable{width: 800px;border: 1px silver solid;}
+        #containerTable{width: 1000px;}
+        #loginButton, #play, #login {position: relative;text-align:center;}
+        #reset{height:60px;margin-top:10px;}
+        #filterLabel{height:60px;}
+        #matchCowLabel, #matchBullLabel, #unmatchedLabel{width:200px;}
+        #unmatchedLabel{display:block;}
+        #save, #load{margin-bottom:20px;border-radius: 26px;}
+
+        table {
+            font-size:40px;
+            border-spacing: 0px;
+            width:1000px;
+        }
+        button {
+            font-size:1em;
+            margin: 2px;
+            width:180px;
+            height:60px;
+            display:inline;
+            border-radius: 2px;
+            border: 5px solid white;
+            background: -webkit-gradient(
+                linear, left top, left bottom,
+                from(#ffffff),
+                color-stop(0.50, #ebebeb),
+                color-stop(0.50, #dbdbdb),
+                to(#524c52));
+        }
+
+        input + label{
+          position: relative;
+          display:block;
+          text-align: center;
+          width:160px;
+          height: 60px;
+          margin: 10px 0px 5px 5px;
+        }
+
+        input + label:before, input + label:after {
+            position: absolute;
+            top: 0px;
+            left:0px;
+            bottom: 0px;
+            right: 0px;
+            content: attr(data-on);
+            transition: transform 0.5s;
+            border: 1px solid silver;
+            border-radius: 26px;
+        }
+
+        input:checked + label:after {
+            border: 3px solid green;
+            transform: scale(1.2);
+            box-shadow:
+                0px 2px 30px rgba(000,000,000,1),
+                inset 0px 0px 0px rgba(255,255,255,0.7);
+        }
+        button.matchCow, input.matchCow + label:before,input.matchCow + label:after {
+            color: #ffffff;
+            background: -webkit-gradient(
+                linear, left top, left bottom,
+                from(#cdcdcd),
+                color-stop(0.50, #5c5c5c),
+                to(#878787));
+            text-shadow: 0px 1px 1px black;
+            border-radius: 26px;
+        }
+
+        #login {
+            display:none;
+            font-size: 6em;
+            width:1000px;
+        }
+
+        caption,button.matchResultCow,button.matchResultBull {
+            color: white;
+            background: #333333;
+        }
+
+        td {
+            border:0px solid purple;
+        }
+
+        button.undefined, input + label:before, input + label:after{
+            background: -webkit-gradient(
+                linear, left top, left bottom,
+                from(#ffffff),
+                color-stop(0.50, #ffffff),
+                to(#a5a5a5));
+        }
+        button.select{
+            font-size:2em;
+            width: 1000px;
+            height:120px;
+            border-radius: 26px;
+            text-shadow:
+                0px -1px 0px rgba(000,000,000,0.2),
+                0px 1px 0px rgba(255,255,255,1);
+        }
+        button.unmatched, #unmatchedLabel{background:#eeeeee;color: silver;}
+        button.matchBull, input.matchBull + label:before,input.matchBull + label:after{
+            color: #ffffff;
+            background: -webkit-gradient(
+                linear, left top, left bottom,
+                from(#a3a3a3),
+                color-stop(0.50, #3b3b3b),
+                color-stop(0.70, #242424),
+                to(#000000));
+            border-radius: 2px;
+        }
+
+        button.wrongResultCow,button.wrongResultBull{
+            color: #242424;
+            border:6px dashed white;
+            background:red;
+        }
+        button.resultCow,button.resultBull {
+            color: #242424;
+            background: silver;
+        }
+
+        button.guessedCow,button.guessedBull{
+            border:6px dashed white;
+            color: white;
+            background: -webkit-gradient(
+                linear, left top, left bottom,
+                from(#a3a3a3),
+                color-stop(0.50, #3b3b3b),
+                color-stop(0.70, #242424),
+                to(#000000));
+            }
+        button.wrongResultCow, button.resultCow,button.guessedCow,button.matchResultCow,
+        button.wrongResultBull, button.resultBull,button.guessedBull,button.matchResultBull{
+            width:98px;
+        }
+        button.wrongResultCow, button.resultCow,button.guessedCow,button.matchResultCow{
+            border-radius: 26px;
+        }
+
+    </style>
 </head>
+
 <body>
 
 <div id="FieldDiv">
     <table id="containerTable">
         <tr>
             <td>
-                <input id=login  style="visibility:visible; display:block;"
+                <input id="login" style="visibility:visible; display:block;"
                        onkeydown="if (event.keyCode==13) {registerPlayer()}">
-                <button id=loginButton class=select onclick="registerPlayer()">Login</button>
+                <button id="loginButton" class="select" onclick="registerPlayer()">Login</button>
             </td>
         </tr>
     </table>

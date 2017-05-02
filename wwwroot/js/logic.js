@@ -2,34 +2,34 @@ var timerId;
 var timerId1;
 
 function registerPlayer(){
-    sendRequest("register","containerTable");
+    sendPost("register","containerTable");
     clearInterval(timerId1);
-    timerId=setTimeout(refresh, 2500);
+//    timerId= setTimeout(refresh, 2500);
 }
 
 function refresh(){
-    sendRequest("refresh","containerTable");
+    sendPost("refresh","containerTable");
     timerId= setTimeout(refresh, 2500);
 }
 
 function checkEnemy(){
     timerId1= setTimeout(checkEnemy, 5000);
-    sendRequest("checkEnemy","enemyTable");
+    sendPost("checkEnemy","enemyTable");
 }
 
 function chooseEnemy(player){
     clearInterval(timerId);
-    sendRequest("chooseEnemy," + player.id,"containerTable");
+    sendPost("chooseEnemy," + player.id,"containerTable");
 }
 
 function play(){
     clearInterval(timerId);
     timerId1= setTimeout(checkEnemy, 5000);
-    sendRequest("play"+getNumber(),"containerTable");
+    sendPost("play"+getNumber(),"containerTable");
 }
 
 function shot(){
-    sendRequest("shot"+getNumber(), "containerTable");
+    sendPost("shot"+getNumber(), "containerTable");
 }
 
 function getNumber(){
@@ -42,13 +42,26 @@ function getNumber(){
     return result;
 }
 
-function sendRequest(request, container){
+function sendPost(request, container){
     var XmlHTTP;
     if (window.XMLHttpRequest) XmlHTTP=new XMLHttpRequest();
-    XmlHTTP.onreadystatechange=function() {
+    XmlHTTP.onreadystatechange = function() {
         if (XmlHTTP.readyState==4 && XmlHTTP.status==200)
             document.getElementById(container).innerHTML=XmlHTTP.responseText;
     }
-    XmlHTTP.open("POST",document.getElementById("login").value+","+ request,true);
+    var params = document.getElementById("login").value + ',' + request;
+    XmlHTTP.open("POST","/",true);
+    XmlHTTP.send(params);
+}
+
+function sendGet(request, container){
+    var XmlHTTP;
+    if (window.XMLHttpRequest) XmlHTTP=new XMLHttpRequest();
+    XmlHTTP.onreadystatechange = function() {
+        if (XmlHTTP.readyState==4 && XmlHTTP.status==200)
+            document.getElementById(container).innerHTML=XmlHTTP.responseText;
+    }
+    var params = document.getElementById("login").value + ',' + request;
+    XmlHTTP.open("GET",params,true);
     XmlHTTP.send();
 }

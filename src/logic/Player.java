@@ -3,13 +3,13 @@ package logic;
 import java.util.*;
 
 import static logic.Brush.*;
-import static logic.HTMLUtils.*;
-import static logic.Utils.ALL_VARIANTS;
+import static logic.Utils.*;
 
 class Player {
     static final Map<String, Player> players = new HashMap<>();
     private final String nameAsHTML;
     private final String name;
+    private final int[] number = new int[4];
     long lastActivity;
     Brush brush;
     Player enemy;
@@ -18,7 +18,6 @@ class Player {
     private List<Shoot> shoots;
     private Brush[][] bulls;
     private boolean guessed;
-    private final int[] number = new int[4];
     private Brush[][] bulls_backup;
     private List<String> possibleVariants;
 
@@ -59,7 +58,7 @@ class Player {
 
     String thinkNumberAsHTML() {
         String[][] temp = new String[3][1];
-        temp[0][0] = tableWrapByColumns(bullWrap(bulls), "thinkNumber", null);
+        temp[0][0] = tableWrap(bullWrap(bulls), "thinkNumber", null);
         temp[1][0] = buttonWrap("Play", "select", "play", "onClick = play(this)");
         temp[2][0] = nameAsHTML;
         return tableWrap(temp, "thinkNumber", name + " vs " + enemy.name);
@@ -77,22 +76,25 @@ class Player {
     }
 
     String getPlayerFieldHTML() {
-        String text, action;
+        String text = "", action = "";
         if (filter) Filter.filter(this.shoots, this.bulls);
-        if (enemy != null && enemy.guessed) {
-            text = battleResult(shoots.size(), enemy.shoots.size());
-            if (this == enemy) text = shoots.size() + " shoots";
-            action = " onClick = registerPlayer()";
-        } else {
-            text = " waiting for " + enemy.name + "...";
-            action = SEND_REQUEST;
+
+        if (enemy != null) {
+            if (enemy.guessed) {
+                text = battleResult(shoots.size(), enemy.shoots.size());
+                if (this == enemy) text = shoots.size() + " shoots";
+                action = " onClick = registerPlayer()";
+            } else {
+                text = " waiting for " + enemy.name + "...";
+                action = SEND_REQUEST;
+            }
         }
 
         String container[][] = {{""}, {""}, {""}, {""}, {""}};
         if (!guessed) {
             container[0][0] = ActionTableAsHTML(brush);
             container[2][0] = bTable(bulls, filter, saved);
-        } else container[2][0] = buttonWrap(text, "select", enemy.name, action);
+        } else if (enemy != null) container[2][0] = buttonWrap(text, "select", enemy.name, action);
         container[1][0] = shoots2HTML(false);
         if (this != enemy) container[3][0] = enemy.shoots2HTML(true);
         container[4][0] = nameAsHTML;
@@ -151,6 +153,7 @@ class Player {
                 if (bulls[digit][i] == undefined) bulls[digit][i] = unmatched;
             bulls[digit][pos] = brush;
         }
+        if (brush == unmatchedCow) bulls[digit][pos] = unmatched;
         if (brush == matchCow && bulls[digit][pos] == undefined) bulls[digit][pos] = brush;
     }
 }
