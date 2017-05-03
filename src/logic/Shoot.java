@@ -32,7 +32,7 @@ class Shoot {
         int cow = 0, bull = 0;
         for (int j = 0; j < 4; j++) {
             int digit = digit(j);
-            Brush brush = Utils.digitStatus(bulls[digit]);
+            Brush brush = Filter.digitStatus(bulls[digit]);
             if (brush == matchBull && (bulls[digit][j] != matchBull)) brush = matchCow;
             if (brush == undefined) defined = false;
             if (brush == matchCow || brush == matchBull) cow++;
@@ -49,11 +49,11 @@ class Shoot {
         if (this.cow == cow) resultCowStyle = "matchResultCow";
         if (this.bull == bull) resultBullStyle = "matchResultBull";
         if (this.bull == 4) {
-            resultCowStyle = "guessedCow";
-            resultBullStyle = "guessedBull";
+            resultCowStyle = "guessed";
+            resultBullStyle = "guessed";
         }
-        result += "<td>" + buttonWrap(this.cow + "", resultCowStyle, null, null);
-        result += buttonWrap(this.bull + "", resultBullStyle, null, null) + "</td>";
+        result += "<td>" + buttonWrap(this.cow + "", resultCowStyle, null, " name=cow ");
+        result += buttonWrap(this.bull + "", resultBullStyle, null, " name=bull ") + "</td>";
         return "<tr>" + result + "</tr>";
     }
 

@@ -66,8 +66,10 @@ class Player {
 
     String playersAsHTML() {
         String result = nameAsHTML;
-        for (String player : players.keySet())
-            result += buttonWrap(player, "select", player, " onClick = chooseEnemy(this)") + "<br/>";
+        for (String player : players.keySet()) {
+            long timeout = 540 - (System.currentTimeMillis() - players.get(player).lastActivity) / 1000;
+            result += buttonWrap(player + ":" + timeout, "select", player, " onClick = chooseEnemy(this)") + "<br/>";
+        }
         return tableWrap(result, "players", name);
     }
 
@@ -92,8 +94,8 @@ class Player {
 
         String container[][] = {{""}, {""}, {""}, {""}, {""}};
         if (!guessed) {
-            container[0][0] = ActionTableAsHTML(brush);
-            container[2][0] = bTable(bulls, filter, saved);
+            container[0][0] = "";
+            container[2][0] = bTable(bulls, filter, saved, brush);
         } else if (enemy != null) container[2][0] = buttonWrap(text, "select", enemy.name, action);
         container[1][0] = shoots2HTML(false);
         if (this != enemy) container[3][0] = enemy.shoots2HTML(true);

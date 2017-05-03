@@ -3,9 +3,19 @@ package logic;
 import java.util.List;
 
 import static logic.Brush.*;
-import static logic.Utils.digitStatus;
 
 class Filter {
+
+    static Brush digitStatus(Brush[] digits) {
+        Brush result = digits[0];
+        for (int i = 1; i < 4; i++) {
+            if (digits[i] == undefined) result = undefined;
+            if (digits[i] == matchCow) result = matchCow;
+            if (digits[i] == matchBull) result = matchBull;
+        }
+        return result;
+    }
+
     static void filter(List<Shoot> shoots, Brush[][] bulls) {
         if (shoots.size() > 0)
             for (int i = 0; i < 3; i++) {
@@ -15,6 +25,7 @@ class Filter {
                 markSingleBulls(bulls);
             }
     }
+
 
     private static void bullsEqualsCows(List<Shoot> shoots, Brush[][] bulls) {
         for (Shoot shoot : shoots) {

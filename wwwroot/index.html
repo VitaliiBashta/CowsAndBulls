@@ -4,28 +4,30 @@
     <script src="/js/logic.js"></script>
     <title>Cows and Bulls</title>
     <style type="text/css">
+        //td {border:1px solid purple;}
+        td {vertical-align:top;}
         body, html {margin:auto;background:#eeeeee;}
-        div {position: relative;width:100%;left: 5%;}
+        div {position: relative;width:94%;left: 5%;}
         input {position: absolute;visibility: hidden;}
         input.unmatched + label{display:none;}
         #guessTable{margin-bottom:30px;}
-        #bullTable{width: 800px;border: 1px silver solid;}
+        #bullTable{width: 720px;border: 1px silver solid;}
         #containerTable{width: 1000px;}
         #loginButton, #play, #login {position: relative;text-align:center;}
         #reset{height:60px;margin-top:10px;}
-        #filterLabel{height:60px;}
-        #matchCowLabel, #matchBullLabel, #unmatchedLabel{width:200px;}
+        #matchCowLabel, #matchBullLabel, #unmatchedLabel, #unmatchedCowLabel{width:96px;}
+        #filterLabel{width:180px;}
         #unmatchedLabel{display:block;}
-        #save, #load{margin-bottom:20px;border-radius: 26px;}
+        #save, #load{border-radius: 26px;}
 
         table {
+            vertical-align:top;
             font-size:40px;
             border-spacing: 0px;
-            width:1000px;
         }
         button {
             font-size:1em;
-            margin: 2px;
+            margin: 10px 0px;
             width:180px;
             height:60px;
             display:inline;
@@ -38,6 +40,8 @@
                 color-stop(0.50, #dbdbdb),
                 to(#524c52));
         }
+        button[name="cow"], button[name="bull"] { width:98px; }
+        button[name="cow"] { border-radius: 50px; }
 
         input + label{
           position: relative;
@@ -67,12 +71,12 @@
                 0px 2px 30px rgba(000,000,000,1),
                 inset 0px 0px 0px rgba(255,255,255,0.7);
         }
-        button.matchCow, input.matchCow + label:before,input.matchCow + label:after {
+        button.matchCow, button.matchResultCow, input.matchCow + label:before,input.matchCow + label:after {
             color: #ffffff;
             background: -webkit-gradient(
                 linear, left top, left bottom,
                 from(#cdcdcd),
-                color-stop(0.50, #5c5c5c),
+                color-stop(0.50, #878787),
                 to(#878787));
             text-shadow: 0px 1px 1px black;
             border-radius: 26px;
@@ -84,14 +88,12 @@
             width:1000px;
         }
 
-        caption,button.matchResultCow,button.matchResultBull {
+        caption,button.matchResultBull {
             color: white;
             background: #333333;
         }
 
-        td {
-            border:0px solid purple;
-        }
+
 
         button.undefined, input + label:before, input + label:after{
             background: -webkit-gradient(
@@ -109,7 +111,8 @@
                 0px -1px 0px rgba(000,000,000,0.2),
                 0px 1px 0px rgba(255,255,255,1);
         }
-        button.unmatched, #unmatchedLabel{background:#eeeeee;color: silver;}
+        button.unmatched, #unmatchedLabel,#unmatchedCowLabel{background:#eeeeee;color: silver;}
+
         button.matchBull, input.matchBull + label:before,input.matchBull + label:after{
             color: #ffffff;
             background: -webkit-gradient(
@@ -122,16 +125,14 @@
         }
 
         button.wrongResultCow,button.wrongResultBull{
-            color: #242424;
-            border:6px dashed white;
             background:red;
         }
         button.resultCow,button.resultBull {
             color: #242424;
-            background: silver;
+            background: #eeeeee;
         }
 
-        button.guessedCow,button.guessedBull{
+        button.guessed{
             border:6px dashed white;
             color: white;
             background: -webkit-gradient(
@@ -140,13 +141,6 @@
                 color-stop(0.50, #3b3b3b),
                 color-stop(0.70, #242424),
                 to(#000000));
-            }
-        button.wrongResultCow, button.resultCow,button.guessedCow,button.matchResultCow,
-        button.wrongResultBull, button.resultBull,button.guessedBull,button.matchResultBull{
-            width:98px;
-        }
-        button.wrongResultCow, button.resultCow,button.guessedCow,button.matchResultCow{
-            border-radius: 26px;
         }
 
     </style>

@@ -4,7 +4,7 @@ var timerId1;
 function registerPlayer(){
     sendPost("register","containerTable");
     clearInterval(timerId1);
-//    timerId= setTimeout(refresh, 2500);
+    timerId= setTimeout(refresh, 2500);
 }
 
 function refresh(){

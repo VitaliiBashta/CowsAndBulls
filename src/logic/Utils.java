@@ -18,15 +18,7 @@ class Utils {
         }
     }
 
-    static Brush digitStatus(Brush[] digits) {
-        Brush result = digits[0];
-        for (int i = 1; i < 4; i++) {
-            if (digits[i] == undefined) result = undefined;
-            if (digits[i] == matchCow) result = matchCow;
-            if (digits[i] == matchBull) result = matchBull;
-        }
-        return result;
-    }
+
     private static boolean isGoodNumber(String strShoot) {
         if (strShoot == null || strShoot.isEmpty()) return false;
         if (strShoot.length() != 4) return false;
@@ -72,7 +64,7 @@ class Utils {
             case "unmatchedCow":
                 if (player.brush == Brush.valueOf(action)) player.brush = Brush.shoot;
                 else player.brush = Brush.valueOf(action);
-                return ActionTableAsHTML(player.brush);
+                return actionTableAsHTML(player.brush);
             case "filter":
                 player.filter = !player.filter;
                 return player.getPlayerFieldHTML();
@@ -97,30 +89,32 @@ class Utils {
         return player.getPlayerFieldHTML();
     }
 
-    static String bTable(Brush[][] bulls, boolean filter, boolean saved) {
+    static String bTable(Brush[][] bulls, boolean filter, boolean saved, Brush brush) {
         String[][] bTable = new String[1][2];
         bTable[0][0] = tableWrap(bullWrap(bulls), "bullTable", null);
-        bTable[0][1] = buttonWrap("Save", null, "save", SEND_REQUEST);
+        bTable[0][1] = actionTableAsHTML(brush);
+        bTable[0][1] += buttonWrap("Reset", null, "reset", SEND_REQUEST);
+        bTable[0][1] += buttonWrap("Save", null, "save", SEND_REQUEST);
         if (saved) bTable[0][1] += buttonWrap("Load", null, "load", SEND_REQUEST);
-        bTable[0][1] += filterWrap(filter);
+        bTable[0][1] += "<input id=filter name=action class=filter type=checkbox" + (filter ? " checked " : " ")
+                + SEND_REQUEST + "><label id=filterLabel for=filter data-on=Filter></label>";
         return tableWrap(bTable, "panel", null) + buttonWrap(" ? ", "select", "shot", "onClick = shot()");
     }
 
-    static String ActionTableAsHTML(Brush brush) {
-        String result[][] = new String[1][4];
-        result[0][0] = checkBoxWrap("matchCow", brush == matchCow);
-        result[0][1] = checkBoxWrap("matchBull", brush == matchBull);
-        result[0][2] = checkBoxWrap("unmatched", brush == unmatched);
-        result[0][3] = buttonWrap("Reset", null, "reset", SEND_REQUEST);
+    private static String actionTableAsHTML(Brush brush) {
+        String result[][] = new String[2][2];
+        result[0][0] = checkBoxWrap("matchCow", brush == matchCow, "cow");
+        result[0][1] = checkBoxWrap("matchBull", brush == matchBull, "bull");
+        result[1][0] = checkBoxWrap("unmatched", brush == unmatched, "cow");
+        result[1][1] = checkBoxWrap("unmatchedCow", brush == unmatchedCow, "bull");
 
         return tableWrap(result, "actionTable", null);
     }
 
-    private static String checkBoxWrap(String arg, boolean checked) {
-        String SEND_REQUEST_ACTION = "onClick = \"sendPost(this.id, actionTable.id)\"";
+    private static String checkBoxWrap(String arg, boolean checked, String text) {
         return "<input id=" + arg + " name=action class=" + arg + " type=checkbox" + (checked ? " checked " : " ")
-                + SEND_REQUEST_ACTION + "><label id=" + arg
-                + "Label for=" + arg + " data-on=\"\"></label>";
+                + "onClick = \"sendPost(this.id, actionTable.id)\"><label id=" + arg
+                + "Label for=" + arg + " data-on=\"" + text + "\"></label>";
     }
 
     static String buttonWrap(String arg, String clazz, String id, String params) {
@@ -163,16 +157,12 @@ class Utils {
             for (int j = 0; j < 4; j++) {
                 String checked = (args[i][j].equals(matchBull)) ? " checked " : "";
                 result[i][j] = "<input id=bull" + i + j + " name=bullDigit" + j + " class=" + args[i][j]
-                        + " type=radio " + checked + SEND_REQUEST
-                        + "><label for=bull" + i + j + " data-on=" + i + "></label>";
+                        + " type=radio " + checked + SEND_REQUEST + ">" +
+                        "<label for=bull" + i + j + " data-on=" + i + "></label>";
             }
         return result;
     }
 
-    private static String filterWrap(boolean checked) {
-        return "<input id=filter name=action class=filter type=checkbox" + (checked ? " checked " : " ")
-                + SEND_REQUEST + "><label id=filterLabel for=filter data-on=Filter></label>";
-    }
 
     //    static String tableWrapByColumns(String args[][], String id, String caption) {
 //        StringBuilder lines = new StringBuilder();
